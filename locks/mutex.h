@@ -14,8 +14,6 @@ namespace mutex {
 
 class Synchronization {
 private:
-  std::atomic<int> conditionVariable;
-
   enum LockState {
     UNLOCKED,
     LOCKED_WITHOUT_CONTENTION,
@@ -23,6 +21,7 @@ private:
   };
 
 public:
+  std::atomic<int> conditionVariable;
   Synchronization() : conditionVariable(LockState::UNLOCKED) {}
 
   void lock() {
