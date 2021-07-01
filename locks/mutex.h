@@ -35,7 +35,7 @@ public:
             conditionVariable.compare_exchange_strong(
                 val, LockState::LOCKED_WITH_CONTENTION,
                 std::memory_order_acquire)) {
-          syscall(SYS_futex, &conditionVariable, FUTEX_WAIT,
+          syscall(SYS_futex, this, FUTEX_WAIT,
                   LockState::LOCKED_WITH_CONTENTION);
         }
         val = LockState::UNLOCKED;
@@ -46,7 +46,7 @@ public:
   void unlock() {
     if (--conditionVariable != LockState::UNLOCKED) {
       conditionVariable.store(LockState::UNLOCKED);
-      syscall(SYS_futex, &conditionVariable, FUTEX_WAKE, 1);
+      syscall(SYS_futex, this, FUTEX_WAKE, 1);
     }
   }
 };
